@@ -34,8 +34,13 @@
     .timeline-section {padding-bottom:110px;}
     .timeline-section h2 {margin-bottom:26px;}
     .timeline-track {position:relative;padding:45px 0 8px;}
-    .timeline-track::before {content:'';position:absolute;width:1px;background:#777;left:50%;top:0;bottom:0;}
-    .timeline-row {display:grid;grid-template-columns:1fr 1fr;min-height:220px;column-gap:64px;align-items:center;}
+    .timeline-track::before {content:'';position:absolute;width:1px;background:#c8c8c8;left:50%;top:0;bottom:0;}
+    .timeline-progress {position:absolute;z-index:1;left:calc(50% - 1px);top:0;height:0;width:2px;background:#171717;pointer-events:none;will-change:height;}
+    .timeline-row {position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:220px;column-gap:64px;align-items:center;}
+    .timeline-row::after {content:'';position:absolute;z-index:2;left:50%;top:50%;width:13px;height:13px;border:2px solid #171717;border-radius:50%;background:#f5f5f5;opacity:0;transform:translate(-50%,-50%) scale(.4);transition:transform .45s cubic-bezier(.16,1,.3,1),opacity .4s ease;pointer-events:none;}
+    .timeline-row.is-visible::after {opacity:1;transform:translate(-50%,-50%) scale(1);}
+    .js-motion .timeline-card {opacity:0;transform:translateY(52px);filter:blur(5px);transition:opacity .78s ease,transform .78s cubic-bezier(.16,1,.3,1),filter .78s ease;}
+    .js-motion .timeline-card.is-visible {opacity:1;transform:translateY(0);filter:blur(0);}
     .timeline-row:first-child {padding-top:15px;}
     .timeline-card {width:100%;max-width:550px;position:relative;background:#fff;display:grid;grid-template-columns:158px 1fr;gap:24px;align-items:center;padding:19px;min-height:208px;}
     .timeline-row.right .timeline-card {grid-column:2;justify-self:start;}
@@ -56,6 +61,9 @@
     .reveal {opacity:1;transform:none;}
     .js-motion .reveal {opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1);}
     .js-motion .reveal.visible {opacity:1;transform:translateY(0);}
+    .js-motion .intro .reveal {transform:translateY(44px);filter:blur(7px);transition:opacity .95s ease,transform .95s cubic-bezier(.16,1,.3,1),filter .95s ease;}
+    .js-motion .intro .reveal.visible {transform:translateY(0);filter:blur(0);}
+    .js-motion .intro p.reveal {transition-delay:.18s;}
     @media(max-width:1000px) {
       .hero {min-height:540px;padding-left:9vw;padding-right:9vw;}
       .hero h1 {font-size:clamp(48px,7.6vw,88px);}
@@ -80,6 +88,8 @@
       .intro p {font-size:13px;}
       .timeline-track {padding:10px 0 30px;}
       .timeline-track::before {left:7px;}
+      .timeline-progress {left:6px;}
+      .timeline-row::after {left:7px;}
       .timeline-row {grid-template-columns:1fr;min-height:unset;padding:0 0 28px 30px;}
       .timeline-row.right .timeline-card,.timeline-row.left .timeline-card {grid-column:1;justify-self:stretch;grid-template-columns:100px 1fr;max-width:none;}
       .timeline-row.left .timeline-card .image-placeholder {grid-column:1;grid-row:1;}
@@ -96,7 +106,8 @@
     }
     @media(prefers-reduced-motion:reduce) {
       html {scroll-behavior:auto;}
-      .js-motion .reveal {opacity:1;transform:none;transition:none;}
+      .js-motion .reveal,.js-motion .intro .reveal,.js-motion .timeline-card {opacity:1;transform:none;filter:none;transition:none;}
+      .timeline-row::after {transition:none;}
     }
   </style>
 </head>
@@ -125,8 +136,9 @@
       <section class="timeline-section section-shell" id="timeline" aria-labelledby="timeline-title">
         <h2 id="timeline-title" class="reveal">TimeLine</h2>
         <div class="timeline-track">
+          <div class="timeline-progress" aria-hidden="true"></div>
           <div class="timeline-row right">
-            <article class="timeline-card reveal">
+            <article class="timeline-card">
               <div class="image-placeholder" aria-label="Image placeholder">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg>
               </div>
@@ -134,7 +146,7 @@
             </article>
           </div>
           <div class="timeline-row left">
-            <article class="timeline-card reveal">
+            <article class="timeline-card">
               <div class="image-placeholder" aria-label="Image placeholder">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg>
               </div>
@@ -142,7 +154,7 @@
             </article>
           </div>
           <div class="timeline-row right">
-            <article class="timeline-card reveal">
+            <article class="timeline-card">
               <div class="image-placeholder" aria-label="Image placeholder">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg>
               </div>
@@ -162,14 +174,63 @@
   <script>
     (function(){
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced || !('IntersectionObserver' in window)) return;
-      document.body.classList.add('js-motion');
-      var observer = new IntersectionObserver(function(entries, ob) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) { entry.target.classList.add('visible'); ob.unobserve(entry.target); }
+      var track = document.querySelector('.timeline-track');
+      var progressLine = document.querySelector('.timeline-progress');
+      var rows = Array.from(document.querySelectorAll('.timeline-row'));
+
+      // Introduction: reveal each element as it enters the viewport.
+      if (!reduced && 'IntersectionObserver' in window) {
+        document.body.classList.add('js-motion');
+        var observer = new IntersectionObserver(function(entries, obs) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, {threshold:0.1, rootMargin:'0px 0px -13% 0px'});
+        document.querySelectorAll('.reveal').forEach(function(item) {
+          observer.observe(item);
         });
-      }, {threshold:0.1, rootMargin:'0px 0px -20px 0px'});
-      document.querySelectorAll('.reveal').forEach(function(item){ observer.observe(item); });
+      }
+
+      if (!track || !progressLine || !rows.length) return;
+
+      // Respect reduced motion: show the complete timeline immediately.
+      if (reduced) {
+        progressLine.style.height = '100%';
+        rows.forEach(function(row) { row.classList.add('is-visible'); });
+        return;
+      }
+
+      // The line tip follows a point 72% down the viewport. When it meets
+      // each timeline card's marker, that card fades and slides into place.
+      function updateTimeline() {
+        var rect = track.getBoundingClientRect();
+        var distance = Math.max(0, Math.min(rect.height, window.innerHeight * .72 - rect.top));
+        progressLine.style.height = distance + 'px';
+
+        rows.forEach(function(row) {
+          var markerY = row.offsetTop + row.offsetHeight / 2;
+          var revealed = distance >= markerY;
+          row.classList.toggle('is-visible', revealed);
+          var card = row.querySelector('.timeline-card');
+          if (card) card.classList.toggle('is-visible', revealed);
+        });
+      }
+
+      var queued = false;
+      function queueTimelineUpdate() {
+        if (queued) return;
+        queued = true;
+        window.requestAnimationFrame(function() {
+          updateTimeline();
+          queued = false;
+        });
+      }
+      window.addEventListener('scroll', queueTimelineUpdate, {passive:true});
+      window.addEventListener('resize', queueTimelineUpdate);
+      queueTimelineUpdate();
     })();
   </script>
 </body>
