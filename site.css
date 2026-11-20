@@ -17,3 +17,36 @@
 @media(max-width:780px){:root{--header-height:70px}.container{width:min(calc(100% - 40px),var(--content))}.brand-avatar{width:43px;height:43px}.brand-name{max-width:188px}.nav-toggle{display:block}.main-nav{display:none;position:absolute;left:0;top:var(--header-height);width:100%;padding:18px 24px 26px;flex-direction:column;align-items:stretch;gap:4px;background:var(--wine);box-shadow:0 15px 23px #0002}.main-nav.open{display:flex}.main-nav a{font-size:16px;padding:12px 4px}.hero{height:max(640px,calc(88svh - var(--header-height)))}.hero-copy{width:calc(100% - 44px)}.hero h1{font-size:clamp(42px,8.2vw,73px);align-self:flex-start;margin:22px 0}.hero-before,.hero-after{font-size:clamp(26px,5vw,37px)}.quote-section{padding-top:60px}.intro-quote{font-size:23px;padding:32px}.about-intro{grid-template-columns:1fr;padding-bottom:68px}.about-intro h2{grid-column:auto}.about-intro-image{height:auto;max-height:440px;aspect-ratio:1.5;object-fit:cover}.questions h2{font-size:24px;margin-bottom:35px}.research-grid{grid-template-columns:1fr;max-width:520px}.research-card{min-height:210px}.research-card h3{margin-bottom:18px}.footer-inner{flex-direction:column;gap:24px}.footer-map{padding-top:0}.site-footer{padding:44px 0}.page-head{padding:78px 0 60px}.timeline-hero{grid-template-columns:1fr;padding:70px 0 95px}.timeline-photo{justify-self:center}.timeline-shell{padding:70px 0}.timeline-board{padding:40px 22px}.timeline-event{padding:18px;font-size:13px}.timeline-row{grid-template-columns:1fr 72px 1fr;gap:8px}.timeline-year{min-width:65px}.team-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.brand-name{max-width:175px}.hero{height:min(720px,max(570px,82svh))}.hero h1{font-size:clamp(35px,9vw,50px);line-height:1.1}.hero h1 span{overflow-wrap:anywhere}.hero-before,.hero-after{font-size:26px}.hero-bg{object-position:53% center}.intro-quote{font-size:20px;padding:26px}.about-intro h2{font-size:24px;line-height:1.35}.about-intro-copy p{font-size:15px;line-height:1.8}.questions{padding-bottom:55px}.eyebrow-rule{font-size:14px}.questions h2{font-size:22px}.footer-inner{width:calc(100% - 40px)}.footer-links{display:grid;grid-template-columns:repeat(2,1fr)}.footer-about p{font-size:14px}.footer-map h2{font-size:16px}.back-top{right:15px;bottom:17px;font-size:12px;padding:9px 14px}.timeline-illustrations{gap:8px}.timeline-illustrations figcaption{font-size:12px}.timeline-track:before,.timeline-progress{left:32px}.timeline-row{display:grid;grid-template-columns:70px minmax(0,1fr);gap:8px;min-height:auto;padding:27px 0 30px}.timeline-year{grid-column:1;grid-row:1;justify-self:start;min-width:64px;font-size:12px;padding:7px 6px}.timeline-event.world{grid-column:2;grid-row:1}.timeline-event.phil{grid-column:2;grid-row:2}.timeline-event.empty{display:none}.timeline-row:after{left:32px;top:55px}.timeline-event{font-size:13px;padding:14px}.timeline-event.world+.timeline-event.phil{margin-top:10px}.team-grid{grid-template-columns:1fr;max-width:440px}.team-photo{height:250px}.page-head h1{font-size:28px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.motion-on .reveal,.motion-on .timeline-event{opacity:1;transform:none;transition:none}.timeline-row:after{transition:none}}
+
+
+/* Figma refinements: avoid question-number collisions at every viewport width. */
+.research-card .sub-label {padding-right:0; margin-right:82px; text-align:right; white-space:nowrap; min-height:18px;}
+.research-card .number {pointer-events:none;}
+
+/* Homepage: use the supplied looping film when HeroVid.mp4 is present.
+   The original Figma still remains beneath it as a loading/failure fallback. */
+.hero img.hero-bg {z-index:0;}
+.hero .hero-video {position:absolute;inset:0;width:100%;height:100%;z-index:1;object-fit:cover;object-position:center center;filter:brightness(.85);pointer-events:none;}
+.hero::after {z-index:2;pointer-events:none;}
+.hero .hero-copy {z-index:3;}
+
+/* Timeline: full-width question title, followed by the original two-paragraph
+   intro on the left and the historical image on the right. */
+.timeline-hero {grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);column-gap:clamp(30px,3vw,50px);row-gap:42px;align-items:start;padding-top:75px;padding-bottom:115px;}
+.timeline-hero h1 {grid-column:1/-1;grid-row:1;max-width:1069px;}
+.timeline-summary {grid-column:1;grid-row:2;max-width:652px;}
+.timeline-summary p {font-size:16px;line-height:26px;margin:0 0 20px;}
+.timeline-summary p:last-child{margin-bottom:0;}
+.timeline-hero .timeline-photo {grid-column:2;grid-row:2;align-self:start;width:min(100%,519px);max-height:none;aspect-ratio:519 / 391;object-fit:cover;justify-self:end;}
+@media (max-width:780px) {
+ .timeline-hero {grid-template-columns:1fr;row-gap:24px;padding-top:60px;padding-bottom:75px;}
+ .timeline-hero h1 {grid-column:1;grid-row:1;}
+ .timeline-summary {grid-column:1;grid-row:2;max-width:100%;}
+ .timeline-hero .timeline-photo {grid-column:1;grid-row:3;width:min(100%,560px);justify-self:center;margin-top:15px;}
+}
+@media (max-width:400px) {
+ .research-card .sub-label {margin-right:78px;font-size:11px;}
+}
+@media (prefers-reduced-motion:reduce) {
+ .hero .hero-video{display:none;}
+}
