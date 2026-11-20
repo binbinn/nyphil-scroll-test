@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0d0d" />
+  <meta name="description" content="A concept prototype for a New York Philharmonic data-story website." />
+  <title>Who Gets Heard? | Interactive Story Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#top" aria-label="Who Gets Heard? Home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span>NY PHIL <i>/</i> THE ARCHIVE</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#question">THE QUESTION</a>
+      <a href="#story">THE STORY</a>
+      <a href="#data">EXPLORE</a>
+      <a href="wireframe.html">WIREFRAME</a>
+    </nav>
+    <a class="header-index" href="#about">ABOUT ↗</a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <video id="heroVideo" class="hero-video" autoplay muted loop playsinline aria-hidden="true" preload="metadata">
+        <source src="assets/hero-loop.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-wash" aria-hidden="true"></div>
+      <div class="hero-lines" aria-hidden="true"></div>
+      <div class="hero-main">
+        <p class="eyebrow hero-eyebrow"><span class="tiny-line"></span> A DATA STORY IN SOUND &amp; SILENCE</p>
+        <h1 id="heroTitle"><span class="title-line">WHO</span><span class="title-line">GETS <em>HEARD?</em></span></h1>
+        <div class="hero-meta">
+          <p>Exploring representation through the<br />New York Philharmonic performance archive.</p>
+          <p class="hero-chapter">AN INTERACTIVE EXPLORATION<br />01 — INTRODUCTION</p>
+        </div>
+      </div>
+      <div class="hero-footer">
+        <span class="vertical-caption">ARCHIVE / REPRESENTATION / HISTORY</span>
+        <a class="scroll-cue" href="#question"><span>SCROLL TO EXPLORE</span><span class="scroll-arrow">↓</span></a>
+        <button type="button" class="motion-toggle" id="motionToggle" aria-pressed="false" aria-label="Pause background video">PAUSE MOTION II</button>
+      </div>
+    </section>
+
+    <section class="statement section-pad" id="question" aria-labelledby="questionTitle">
+      <div class="section-heading reveal"><span class="section-number">01 / THE QUESTION</span><span class="section-line"></span><span class="section-type">LISTEN CLOSELY</span></div>
+      <p class="statement-kicker reveal">An orchestra is more than the music it plays.</p>
+      <h2 id="questionTitle" class="statement-title reveal">An archive tells a story.<br /><span>What it leaves out</span><br />tells another.</h2>
+      <div class="statement-bottom reveal">
+        <span class="asterisk" aria-hidden="true">✳</span>
+        <p>What can performance records reveal about which composers are remembered, repeated, and heard? Scroll through a prototype of our research story.</p>
+      </div>
+    </section>
+
+    <section class="narrative section-pad" id="story" aria-labelledby="storyTitle">
+      <div class="section-heading reveal"><span class="section-number">02 / THE STORY</span><span class="section-line"></span><span class="section-type">FOLLOW THE RECORD</span></div>
+      <div class="narrative-layout">
+        <div class="narrative-sticky">
+          <span class="eyebrow">SCROLL-DRIVEN STORYTELLING</span>
+          <h2 id="storyTitle">THE <span>UNSEEN</span><br />PATTERN.</h2>
+          <div class="record-art" aria-hidden="true">
+            <div class="record-rings"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="record-label"><span>THE ARCHIVE</span><strong id="stickyStage">01</strong><span>RECORD / STORY</span></div>
+          </div>
+          <p class="sticky-note">As you scroll, the active chapter changes.</p>
+        </div>
+        <div class="narrative-steps">
+          <article class="story-step reveal" data-stage="01">
+            <span class="step-number">CHAPTER / 01</span>
+            <h3>Every program is a choice.</h3>
+            <p>Concert programs document what an institution chose to perform. Over time, those choices become a musical history.</p>
+          </article>
+          <article class="story-step reveal" data-stage="02">
+            <span class="step-number">CHAPTER / 02</span>
+            <h3>Patterns emerge over time.</h3>
+            <p>Looking across decades helps us ask whose compositions appear consistently and whose work remains less visible.</p>
+          </article>
+          <article class="story-step reveal" data-stage="03">
+            <span class="step-number">CHAPTER / 03</span>
+            <h3>Data doesn't tell the whole story.</h3>
+            <p>Classification choices, missing records, and the structure of archival data shape what we can see.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="data-section section-pad" id="data" aria-labelledby="dataTitle">
+      <div class="section-heading reveal"><span class="section-number">03 / EXPLORE</span><span class="section-line"></span><span class="section-type">DATA AS A STORY</span></div>
+      <div class="data-intro reveal"><h2 id="dataTitle">LOOK <em>CLOSER.</em></h2><p>Interactive data belongs here. This first version demonstrates the design and transitions before we connect the team's real Tableau visualizations.</p></div>
+      <div class="data-panel reveal" role="region" aria-label="Interactive visualization mockup">
+        <div class="data-panel-top"><span>DATA VIEW / PROTOTYPE</span><span class="status-dot">DESIGN DEMO</span></div>
+        <div class="data-switcher" role="group" aria-label="Choose story view">
+          <button class="data-tab active" type="button" data-tab="representation" aria-pressed="true">01 / REPRESENTATION</button>
+          <button class="data-tab" type="button" data-tab="repertoire" aria-pressed="false">02 / REPERTOIRE</button>
+        </div>
+        <div class="data-stage">
+          <div class="data-copy"><span class="eyebrow" id="dataLabel">RESEARCH QUESTION ONE</span><h3 id="dataHeadline">Whose compositions appear?</h3><p id="dataBody">Explore how the representation of composers changes over time.</p></div>
+          <div class="viz-placeholder" aria-label="Placeholder for the team's actual data visualization">
+            <div class="viz-axis"><span>VISUALIZATION SPACE</span><span>TO BE CONNECTED TO REAL DATA</span></div>
+            <div class="viz-lines" aria-hidden="true"><span class="vline" style="--h:19%;--delay:.05s"></span><span class="vline" style="--h:27%;--delay:.15s"></span><span class="vline" style="--h:36%;--delay:.25s"></span><span class="vline" style="--h:25%;--delay:.35s"></span><span class="vline" style="--h:47%;--delay:.45s"></span><span class="vline" style="--h:64%;--delay:.55s"></span><span class="vline" style="--h:53%;--delay:.65s"></span><span class="vline" style="--h:78%;--delay:.75s"></span></div>
+            <span class="viz-caption">ILLUSTRATIVE SHAPES ONLY · NOT ACTUAL DATA</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer section-pad" id="about">
+      <p class="eyebrow reveal">A WORK IN PROGRESS / UCLA DIGITAL HUMANITIES</p>
+      <h2 class="reveal">THE STORY IS<br /><em>STILL BEING WRITTEN.</em></h2>
+      <div class="footer-bottom"><span>NY PHILHARMONIC DATA STORY</span><span>INTERACTIVE HOMEPAGE PROTOTYPE · NOT THE FINAL RESEARCH SITE</span><a href="#top">BACK TO TOP ↑</a></div>
+    </footer>
+  </main>
+</body>
+</html>
